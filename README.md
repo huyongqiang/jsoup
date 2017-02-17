@@ -1,44 +1,100 @@
-# jsoup: Java HTML Parser
+# 开源项目Jsoup使用简介
+
+jsoup 是一款 Java 的HTML 解析器，可通过DOM，CSS选择器以及类似于JQuery的操作方法来提取和操作Html文档数据。
+
 
 开源地址：[https://github.com/open-android/Jsoup](https://github.com/open-android/Jsoup "开源项目地址")
 
-**jsoup** is a Java library for working with real-world HTML. It provides a very convenient API for extracting and manipulating data, using the best of DOM, CSS, and jquery-like methods.
+# 使用效果
+![](jsoup01.png)
+
+## 使用步骤
+
+### 1. 在project的build.gradle添加如下代码(如下图)
+
+	allprojects {
+	    repositories {
+	        ...
+	        maven { url "https://jitpack.io" }
+	    }
+	}
+
+![](common.png)
+
+### 2. 在Module的build.gradle添加依赖
+	
+	compile 'com.github.open-android:Jsoup:jsoup-1.10.2'
+
+### 3.演示步骤
+
+* a.测试用html内容如下
 
 
-**jsoup** implements the [WHATWG HTML5](http://whatwg.org/html) specification, and parses HTML to the same DOM as modern browsers do.
+		<html>
+		 <head>
+		  <title>First parse</title>
+		 </head>
+		 <body>
+		  <p align="center">attribute parse</p>
+		  <p>text parse</p>
+		 </body>
+		</html>
 
-* scrape and [parse](https://jsoup.org/cookbook/input/parse-document-from-string) HTML from a URL, file, or string
-* find and [extract data](https://jsoup.org/cookbook/extracting-data/selector-syntax), using DOM traversal or CSS selectors
-* manipulate the [HTML elements](https://jsoup.org/cookbook/modifying-data/set-html), attributes, and text
-* [clean](https://jsoup.org/cookbook/cleaning-html/whitelist-sanitizer) user-submitted content against a safe white-list, to prevent XSS attacks
-* output tidy HTML
+* b.将演示代码复制到Activity的onCreate方法中
 
-jsoup is designed to deal with all varieties of HTML found in the wild; from pristine and validating, to invalid tag-soup; jsoup will create a sensible parse tree.
+        //测试用html字符串
+        String html = "<html><head><title>First parse</title></head>"
+                + "<body><p align=\"center\">attribute parse</p>"
+                + "<p>text parse</p></body></html>";
 
-See [**jsoup.org**](https://jsoup.org/) for downloads and the full [API documentation](https://jsoup.org/apidocs/).
+        //Jsoup解析获得Document对象
+        Document doc = Jsoup.parse(html);
 
-## Example
-Fetch the [Wikipedia](http://en.wikipedia.org/wiki/Main_Page) homepage, parse it to a [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction), and select the headlines from the *In the News* section into a list of [Elements](https://jsoup.org/apidocs/index.html?org/jsoup/select/Elements.html) ([online sample](https://try.jsoup.org/~LGB7rk_atM2roavV0d-czMt3J_g)):
+        System.out.println("解析出来的html:\n"+doc.toString());
 
-```java
-Document doc = Jsoup.connect("http://en.wikipedia.org/").get();
-Elements newsHeadlines = doc.select("#mp-itn b a");
-```
 
-## Open source
-jsoup is an open source project distributed under the liberal [MIT license](https://jsoup.org/license). The source code is available at [GitHub](https://github.com/jhy/jsoup/tree/master/src/main/java/org/jsoup).
+        //获得head元素对象
+        Element head = doc.head();
 
-## Getting started
-1. [Download](https://jsoup.org/download) the latest jsoup jar (or it add to your Maven/Gradle build)
-2. Read the [cookbook](https://jsoup.org/cookbook/)
-3. Enjoy!
+        //DOM方式获得第一个title元素
+        Element title = head.getElementsByTag("title").first();
 
-## Development and support
-If you have any questions on how to use jsoup, or have ideas for future development, please get in touch via the [mailing list](https://jsoup.org/discussion).
+        //获得title元素中文本
+        String text = title.text();
+        System.out.println("title标签中文本: " + text);
 
-If you find any issues, please file a [bug](https://jsoup.org/bugs) after checking for duplicates.
 
-The [colophon](https://jsoup.org/colophon) talks about the history of and tools used to build jsoup.
+        //---------------------------------------
 
-## Status
-jsoup is in general, stable release.
+
+        //获得body元素对象
+        Element body = doc.body();
+
+        //选择器语法查找p元素
+        Elements lists = body.select("p");
+
+        //遍历所有p元素，输出p元素文本
+        for(Element p : lists){
+            System.out.println("p元素文本: " + p.text());
+        }
+
+
+        //选择器语法查找第一个拥有align属性的p元素
+        Element pElement = body.select("p[align]").first();
+
+        //获得p元素align属性值
+        String align = pElement.attr("align");
+        System.out.println("p元素align属性值: " + align);
+
+
+> 注意：如果解析指定url需要添加网络访问权限
+> 
+
+* 更多干货请下载app
+
+
+![黑马助手.png](http://upload-images.jianshu.io/upload_images/4037105-f777f1214328dcc4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+* 欢迎关注微信公众号
+
+![](http://upload-images.jianshu.io/upload_images/4037105-8f737b5104dd0b5d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
